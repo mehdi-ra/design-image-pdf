@@ -2,10 +2,12 @@ import 'reflect-metadata';
 import 'module-alias/register';
 
 import Jimp from 'jimp';
+import {resolve} from 'path';
 
 // Load the base image and the image to be added
-const baseImagePath = 'path/to/base/image.jpg';
-const imageToAddPath = 'path/to/image/to/add.png';
+const baseImagePath = resolve('src/assets/design-background.jpg');
+const designImage = resolve('src/assets/design-sample.png');
+const productImage = resolve('src/assets/product-image.jpg');
 
 // Define the position to place the image
 const positionX = 100;
@@ -24,7 +26,7 @@ const textOptions = {
 // Read the images using Jimp
 const loadImages = async () => {
   const baseImage = await Jimp.read(baseImagePath);
-  const imageToAdd = await Jimp.read(imageToAddPath);
+  const imageToAdd = await Jimp.read(designImage);
   return {baseImage, imageToAdd};
 };
 
@@ -33,7 +35,7 @@ const processImages = async () => {
   const {baseImage, imageToAdd} = await loadImages();
 
   // Resize the image to be added to fit within the base image
-  imageToAdd.resize(200, 200);
+  // imageToAdd.resize(300, 200);
 
   // Composite the image onto the base image at the specified position
   baseImage.composite(imageToAdd, positionX, positionY);
@@ -42,7 +44,7 @@ const processImages = async () => {
   baseImage.print(await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK), textPositionX, textPositionY, textOptions);
 
   // Save the result
-  const outputPath = 'path/to/output/image.jpg';
+  const outputPath = resolve('output', 'result.jpg');
   await baseImage.writeAsync(outputPath);
 
   console.log('Image composition complete!');
